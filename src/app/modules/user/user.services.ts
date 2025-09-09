@@ -13,6 +13,14 @@ const fetchUserDB = async () => {
   return result;
 };
 const updateUserDB = async (payload: Partial<IUser>, userId: string) => {
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    throw new Error(`User with id ${userId} not found`);
+  }
+
   const result = await prisma.user.update({
     where: { id: userId },
     data: payload,

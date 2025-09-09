@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { UserRouter } from "../modules/user/user.route";
+import { productRoute } from "../modules/product/product.route";
+import { reviewRoute } from "../modules/review/review.route";
+import { categoryRoute } from "../modules/category/category.route";
 
 const router = Router();
 
-const allRouters = [UserRouter];
+const allRouters = [UserRouter, productRoute, reviewRoute, categoryRoute];
 
 allRouters.forEach((route) => router.use(route));
 

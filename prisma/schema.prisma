@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,21 +7,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  address   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  gender    GenderType
+  reviews   Review[]
+
+  @@map("user")
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  description   String?
+  price         Float
+  discountPrice Float?
+  currency      String   @default("BDT")
+  stock         Int      @default(0)
+  sku           String   @unique
+  brand         String?
+  images        String[]
+  thumbnail     String?
+  categoryId    String
+  rating        Float?   @default(0.0)
+  reviewsCount  Int?     @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  category      Category @relation(fields: [categoryId], references: [id])
+  reviews       Review[]
+
+  @@index([categoryId])
+  @@map("product")
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique
+  products Product[]
+
+  @@map("category")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      @default(0)
+  comment   String?
+  createdAt DateTime @default(now())
+  userId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([productId])
+  @@map("review")
+}
+
 enum GenderType {
   male
   female
   other
-}
-
-model User{
-  id String @id @default(uuid())
-  name String 
-  email String @unique
-  password String
-  gender  GenderType
-  address String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@map("user")
 }

@@ -4,15 +4,15 @@ import { UserController } from "./user.controller";
 const router = Router();
 
 // Create a user
-router.post("/", UserController.createdUser);
+router.post("/users", UserController.createdUser);
 
 // Fetch all users
-router.get("/", UserController.fetchUser);
+router.get("/users", UserController.fetchUser);
 
 // Update a user by ID
-router.put("/:userId", UserController.updateUser);
+router.put("/users/:userId", UserController.updateUser);
 
 // Delete a user by ID
-router.delete("/:userId", UserController.deleteUser);
+router.delete("/users/:userId", UserController.deleteUser);
 
 export const UserRouter = router;

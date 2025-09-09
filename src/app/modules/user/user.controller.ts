@@ -10,6 +10,7 @@ const createdUser = catchAsync(async (req, res) => {
     message: "user created successfully",
     result,
   });
+ 
 });
 
 const fetchUser = catchAsync(async (req, res) => {
