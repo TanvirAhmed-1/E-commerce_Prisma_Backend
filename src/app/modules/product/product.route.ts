@@ -7,8 +7,10 @@ route.post("/products", productController.createProduct);
 
 route.get("/products", productController.fetchProduct);
 
+route.get("/products/:id", productController.fetchProduct);
+
 route.put("/products", productController.updateProduct);
 
 route.delete("/products", productController.deleteProduct);
 
-export const productRoute=route
+export const productRoute = route;

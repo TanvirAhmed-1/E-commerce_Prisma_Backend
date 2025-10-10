@@ -9,6 +9,8 @@ router.post("/reviews", reviewController.createReview);
 // Get all reviews for a product
 router.get("/reviews", reviewController.fetchReview);
 
+router.get("/reviews/:productId", reviewController.fetchSingleReview);
+
 // Update a review by ID
 router.put("/reviews/:reviewId", reviewController.updateReview);
 

@@ -13,8 +13,39 @@ const createReview = catchAsync(async (req, res) => {
 });
 
 const fetchReview = catchAsync(async (req, res) => {
+  const { id } = req.params; // optional path param
+  const productId = req.query.productId as string | undefined; // optional query param
+
+  let result;
+  let message;
+
+  if (id) {
+    // Single review by ID
+    result = await reviewServices.fetchReviewDb(id);
+    if (!result) {
+      return res.status(httpStatus.NOT_FOUND).json({
+        success: false,
+        message: "Review not found",
+      });
+    }
+    message = "Single review fetched successfully";
+  } else {
+    // All reviews or filtered by productId
+    result = await reviewServices.fetchReviewDb(productId);
+    message = "Reviews fetched successfully";
+  }
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: 200,
+    message,
+    result,
+  });
+});
+
+const fetchSingleReview = catchAsync(async (req, res) => {
   const { productId } = req.params;
-  const result = await reviewServices.fetchReviewDb(productId);
+  const result = await reviewServices.fetchSingleReviewDB(productId);
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: 200,
@@ -48,6 +79,7 @@ const deleteReview = catchAsync(async (req, res) => {
 export const reviewController = {
   createReview,
   fetchReview,
+  fetchSingleReview,
   updateReview,
   deleteReview,
 };

@@ -27,25 +27,19 @@ This is a backend API for an E-commerce project built using **Node.js**, **Expre
 
 1. Clone the repository:
 
-```bash
 git clone https://github.com/TanvirAhmed-1/Backend_Prisma.git
 cd Backend_Prisma
 Install dependencies:
 
-
 npm install
 Create a .env file in the root directory and add your database URL:
-
 
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 Run Prisma migrations (if needed):
 
-
 npx prisma migrate dev --name init
 Generate Prisma client:
 
-bash
-কোড কপি করুন
 npx prisma generate
 Start the server:
 
@@ -54,7 +48,6 @@ The server will run at: http://localhost:5000
 
 API Endpoints
 
-
 /api/users – CRUD operations for users
 
 /api/products – CRUD operations for products
@@ -62,4 +55,7 @@ API Endpoints
 /api/categorys – CRUD operations for categories
 
 /api/reviews – CRUD operations for reviews
+
+```
+
 ```

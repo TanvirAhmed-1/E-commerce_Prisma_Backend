@@ -21,12 +21,19 @@ const createReviewDb = async (payload: IReview) => {
   return result;
 };
 
-const fetchReviewDb = async (productId: string) => {
-  const result = await prisma.review.findMany({
-    where: { productId },
-    include: { user: true }, 
+const fetchReviewDb = async (productId?: string) => {
+  const where = productId ? { productId } : {};
+  return prisma.review.findMany({
+    where,
+    include: { user: true },
   });
-  return result;
+};
+
+const fetchSingleReviewDB = async (productId: string) => {
+  return await prisma.review.findUnique({
+    where: { id: productId },
+    include: { user: true },
+  });
 };
 
 const updateReviewDb = async (payload: Partial<IReview>, reviewId: string) => {
@@ -47,6 +54,7 @@ const deleteReviewDb = async (reviewId: string) => {
 export const reviewServices = {
   createReviewDb,
   fetchReviewDb,
+  fetchSingleReviewDB,
   updateReviewDb,
   deleteReviewDb,
 };

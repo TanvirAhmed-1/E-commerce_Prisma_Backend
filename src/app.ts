@@ -35,14 +35,10 @@ import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import { BaseRouter } from "./app/routes";
 import { UserRouter } from "./app/modules/user/user.route";
 import { categoryRoute } from "./app/modules/category/category.route";
-// path adjust করো
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Mount user routes
-//app.use("/api", categoryRoute);
 
 app.use("/api", BaseRouter);
 
