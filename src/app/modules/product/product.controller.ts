@@ -4,7 +4,7 @@ import { ProductServices } from "./product.services";
 import { Request, Response } from "express";
 
 // 🟢 Unified GET controller for all /products and /products/:id
-const fetchProduct = catchAsync(async (req: Request, res: Response) => {
+const fetchProduct = catchAsync(async (req, res) => {
   const { id } = req.params;
   const name = getQueryString(req.query.name);
   const category = getQueryString(req.query.category);
@@ -46,7 +46,7 @@ const getQueryString = (value: unknown): string | undefined => {
   return undefined;
 };
 
-const createProduct = catchAsync(async (req: Request, res: Response) => {
+const createProduct = catchAsync(async (req, res) => {
   const result = await ProductServices.createProductDB(req.body);
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -55,7 +55,7 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateProduct = catchAsync(async (req: Request, res: Response) => {
+const updateProduct = catchAsync(async (req, res) => {
   const { productId } = req.params;
   const result = await ProductServices.updateProductDB(req.body, productId);
   res.status(httpStatus.OK).json({
@@ -65,7 +65,7 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteProduct = catchAsync(async (req: Request, res: Response) => {
+const deleteProduct = catchAsync(async (req, res) => {
   const { productId } = req.params;
   await ProductServices.deleteProductDB(productId);
   res.status(httpStatus.OK).json({

@@ -62,6 +62,7 @@ model Product {
   order         Order[]
   orderItem     OrderItem[]
   productVariant ProductVariant[]
+  payment        Payment[]
 
   @@index([categoryId])
   @@map("product")
@@ -169,6 +170,8 @@ model Payment {
   id        String        @id @default(uuid())
   userId    String
   user      User          @relation(fields: [userId], references: [id])
+  productId String
+  product   Product       @relation(fields: [productId], references: [id])
   amount    Float
   type      PaymentType
   status    PaymentStatus @default(PENDING)

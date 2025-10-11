@@ -1,34 +1,45 @@
-// src/middlewares/globalErrorHandler.ts
 import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { Prisma } from "@prisma/client";
+import { ZodError } from "zod";
 
-const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err); // console এ দেখাবে debugging জন্য
+const globalErrorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.error(" Global Error:", err);
+
+  let statusCode = 500;
+  let message = "Something went wrong";
 
   // Prisma unique constraint error
-  if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-    return res.status(httpStatus.CONFLICT).json({
-      success: false,
-      statusCode: 409,
-      message: "Email already exists",
-    });
-  }
+if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+  statusCode = httpStatus.CONFLICT;
+  // Type assertion: target কে string[] ধরছি
+  const targetFields = err.meta?.target as string[] | undefined;
+  message = targetFields
+    ? `Duplicate field value: ${targetFields.join(", ")}`
+    : "Duplicate field value detected";
+}
 
   // Zod validation error
-  if (err?.name === "ZodError") {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      success: false,
-      statusCode: 400,
-      message: err.errors.map((e: any) => e.message).join(", "),
-    });
+  else if (err instanceof ZodError) {
+    statusCode = httpStatus.BAD_REQUEST;
+    message = err.issues.map((issue) => issue.message).join(", ");
   }
 
-  // Generic error
-  res.status(err.statusCode || 500).json({
+  // Other JS errors
+  else if (err instanceof Error) {
+    message = err.message;
+  }
+
+  return res.status(statusCode).json({
     success: false,
-    statusCode: err.statusCode || 500,
-    message: err.message || "Something went wrong",
+    statusCode,
+    message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 };
 

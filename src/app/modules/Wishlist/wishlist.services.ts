@@ -17,9 +17,9 @@ const createToWishlist = async (userId: string, productId: string) => {
 };
 
 // Remove product from wishlist
-const deleteFromWishlist = async (userId: string, productId: string) => {
-  return prisma.wishlist.deleteMany({
-    where: { userId, productId },
+const deleteFromWishlist = async (wishlistId: string) => {
+  return prisma.wishlist.delete({
+    where: { id: wishlistId },
   });
 };
 
@@ -27,7 +27,14 @@ const deleteFromWishlist = async (userId: string, productId: string) => {
 const getUserWishlist = (userId: string) => {
   return prisma.wishlist.findMany({
     where: { userId },
-    include: { product: true },
+    include: { product: true, user: true },
+  });
+};
+
+// Get all wishlist items for a user
+const getAllWishlistDB = () => {
+  return prisma.wishlist.findMany({
+    include: { product: true, user: true },
   });
 };
 
@@ -35,4 +42,5 @@ export const wishlistServices = {
   createToWishlist,
   deleteFromWishlist,
   getUserWishlist,
+  getAllWishlistDB,
 };
