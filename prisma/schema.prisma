@@ -34,6 +34,7 @@ model User {
   wishlist    Wishlist[]
  payment   Payment[]
  order     Order[]
+ coupon    Coupon[]
 
   @@map("user")
 }
@@ -128,11 +129,14 @@ model Coupon {
   discount  Float
   validFrom DateTime
   validTo   DateTime
+  userId    String
+  user      User  @relation(fields: [userId], references: [id])
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("coupon")
+  @@index([userId])
 }
 
 model ProductVariant {
@@ -152,7 +156,7 @@ model ProductVariant {
  
 }
 
-enum PaymentStatus {
+ enum PaymentStatus {
   PENDING
   COMPLETED
   FAILED
@@ -174,7 +178,7 @@ model Payment {
   product   Product       @relation(fields: [productId], references: [id])
   amount    Float
   type      PaymentType
-  status    PaymentStatus @default(PENDING)
+  paymentStatus    PaymentStatus @default(PENDING)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 

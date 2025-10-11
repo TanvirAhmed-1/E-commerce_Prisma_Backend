@@ -11,7 +11,7 @@ export const PaymentValidation = z.object({
     message: "Invalid payment type",
   }),
   status: z
-    .enum(
+    .enum( 
       ["PENDING", "COMPLETED", "FAILED", "CANCELLED", "REFUNDED"] as const,
       { message: "Invalid payment status" }
     )
