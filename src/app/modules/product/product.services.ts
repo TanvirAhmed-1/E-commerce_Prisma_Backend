@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import prisma from "../../utils/prisma";
 import { IProduct } from "./product.interface";
 
@@ -8,7 +9,21 @@ interface ISearchParams {
 }
 
 const createProductDB = async (payload: IProduct) => {
-  return prisma.product.create({ data: payload });
+  // create sura
+  const slug = slugify(payload.name, { lower: true, strict: true });
+  //  create sku
+  const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const randomPart = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
+  const sku = `SKU-${datePart}-${randomPart}`;
+
+  const sendData={
+     ...payload,
+        slug,
+        sku,
+  }
+  return prisma.product.create({ data: sendData });
 };
 
 const fetchProductDB = async () => {

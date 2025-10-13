@@ -14,3 +14,4 @@ export const CouponValidation = z.object({
   ),
   active: z.boolean().optional().default(true),
 });
+ 

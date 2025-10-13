@@ -35,20 +35,25 @@ model User {
  payment   Payment[]
  order     Order[]
  coupon    Coupon[]
+ notification Notification[]
+ shippingInfo ShippingAddress[]
 
   @@map("user")
 }
 
+
+
+
 model Product {
   id            String   @id @default(uuid())
   name          String
-  slug          String   @unique
+  slug          String?   @unique
   description   String?
   price         Float
   discountPrice Float?
   currency      String   @default("BDT")
   stock         Int      @default(0)
-  sku           String   @unique
+  sku           String?   @unique 
   brand         String?
   images        String[]
   thumbnail     String?
@@ -64,6 +69,7 @@ model Product {
   orderItem     OrderItem[]
   productVariant ProductVariant[]
   payment        Payment[]
+  stockHistory   StockHistory[]
 
   @@index([categoryId])
   @@map("product")
@@ -77,6 +83,25 @@ model Category {
 
   @@map("category")
 }
+
+enum ChangeType {
+ORDER
+RETURN
+RESTOCK
+} 
+
+model StockHistory {
+  id          String   @id @default(uuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  changeType  ChangeType  
+  quantity    Int
+  createdAt   DateTime @default(now())
+  note        String?
+  @@map("stockHistory")
+  @@index([productId])
+}
+
 
 model Wishlist {
   id String @id @default(uuid())
@@ -143,7 +168,6 @@ model ProductVariant {
   id        String   @id @default(uuid())
   productId String
   product   Product  @relation(fields: [productId], references: [id])
-  sku       String   @unique
   color     String?
   size      String?
   stock     Int      @default(0)
@@ -199,4 +223,50 @@ model Review {
   @@index([productId])
   @@map("review")
 }
+
+model ShippingAddress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  division    String
+  district    String
+  street      String
+  phone       String
+  postalCode  String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("shipping_address")
+  @@index([userId])
+}
+
+enum NotificationType {
+  ORDER
+  PAYMENT
+  PRODUCT
+  COUPON
+  SYSTEM
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
+  title       String
+  message     String
+  type        NotificationType
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  relatedId   String?   // orderId, productId etc.
+  
+  @@index([userId])
+  @@map("notification")
+}
+
+
+
+
+
 

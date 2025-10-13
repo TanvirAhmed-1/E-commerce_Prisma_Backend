@@ -23,7 +23,6 @@ const fetchProductVariantsDB = async () => {
   return prisma.productVariant.findMany({
     select: {
       id: true,
-      sku: true,
       color: true,
       size: true,
       stock: true,

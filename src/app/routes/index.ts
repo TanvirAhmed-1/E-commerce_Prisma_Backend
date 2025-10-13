@@ -8,6 +8,7 @@ import { orderRoute } from "../modules/Order/order.route";
 import { paymentRoute } from "../modules/payment/payment.route";
 import { couponRouter } from "../modules/coupon/coupon.route";
 import { variantRoute } from "../modules/productVariant/productVariant.route";
+import { ShippingAddressRoutes } from "../modules/shippingAddress/shippingAddress.routes";
 
 const router = Router();
 
@@ -21,6 +22,7 @@ const allRouters = [
   paymentRoute,
   couponRouter,
   variantRoute,
+  ShippingAddressRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

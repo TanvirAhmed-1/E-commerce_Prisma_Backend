@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { ProductServices } from "./product.services";
-import { Request, Response } from "express";
+
 
 // 🟢 Unified GET controller for all /products and /products/:id
 const fetchProduct = catchAsync(async (req, res) => {
