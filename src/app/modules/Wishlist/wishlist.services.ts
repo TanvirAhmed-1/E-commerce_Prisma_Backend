@@ -3,6 +3,8 @@ const prisma = new PrismaClient();
 
 // Add product to wishlist
 const createToWishlist = async (userId: string, productId: string) => {
+
+  
   const existing = await prisma.wishlist.findFirst({
     where: { userId, productId },
   });

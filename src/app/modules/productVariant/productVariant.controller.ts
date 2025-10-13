@@ -6,6 +6,7 @@ import { productVariantServices } from "./productVariant.services";
 const createProductVariant = catchAsync(async (req, res) => {
   const result = await productVariantServices.createProductVariantDB(req.body);
 
+  
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,

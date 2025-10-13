@@ -1,7 +1,31 @@
+import httpStatus from "http-status";
 import prisma from "../../utils/prisma";
 import { paymentType } from "./payment.interface";
 
 const createPaymentDB = async (payload: paymentType) => {
+  const { userId, productId } = payload;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    const error: any = new Error("Invalid userId: User not found");
+    error.status = httpStatus.BAD_REQUEST;
+    throw error;
+  }
+
+  // ✅ Step 2: Validate productId
+  const existingProduct = await prisma.product.findUnique({
+    where: { id: productId },
+  });
+
+  if (!existingProduct) {
+    const error: any = new Error("Invalid productId: Product not found");
+    error.status = httpStatus.BAD_REQUEST;
+    throw error;
+  }
+
   const result = await prisma.payment.create({
     data: payload,
   });

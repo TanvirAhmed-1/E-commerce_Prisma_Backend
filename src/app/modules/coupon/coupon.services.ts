@@ -1,8 +1,22 @@
+import httpStatus from "http-status";
 import prisma from "../../utils/prisma";
 import { couponType } from "./coupon.interface";
+import { CouponValidation } from "./coupon.validation";
 
 const createCouponBD = async (sendData: couponType) => {
-  return await prisma.coupon.create({ data: sendData });
+  //const { userId } = sendData;
+
+  const parsed = CouponValidation.parse(sendData);
+  // const existingUser = await prisma.user.findUnique({
+  //   where: { id: userId },
+  // });
+
+  // if (!existingUser) {
+  //   const error: any = new Error("Invalid userId: User not found");
+  //   error.status = httpStatus.BAD_REQUEST;
+  //   throw error;
+  // }
+  return await prisma.coupon.create({ data: parsed });
 };
 
 const getCouponBD = async () => {

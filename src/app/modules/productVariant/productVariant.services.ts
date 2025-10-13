@@ -1,15 +1,22 @@
+import httpStatus from "http-status";
 import prisma from "../../utils/prisma";
 import { ProductVariantType } from "./productVariant.interface";
 import { ProductVariantValidation } from "./productVariant.validation";
 
 const createProductVariantDB = async (payload: ProductVariantType) => {
+  // ✅ Validate payload
   const parsed = ProductVariantValidation.parse(payload);
 
-  const variant = await prisma.productVariant.create({
-    data: parsed,
+  const existingProduct = await prisma.product.findUnique({
+    where: { id: parsed.productId },
   });
 
-  return variant;
+  if (!existingProduct) {
+    throw {
+      status: httpStatus.BAD_REQUEST,
+      message: "Invalid productId: Product not found",
+    };
+  }
 };
 
 const fetchProductVariantsDB = async () => {
