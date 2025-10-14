@@ -9,3 +9,8 @@ export type IUser = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type loginType = {
+  email: string;
+  password: string;
+};

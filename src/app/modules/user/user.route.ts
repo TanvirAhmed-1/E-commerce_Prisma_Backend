@@ -6,6 +6,8 @@ const router = Router();
 // Create a user
 router.post("/users", UserController.createdUser);
 
+router.post("/login", UserController.loginUser);
+
 // Fetch all users
 router.get("/users", UserController.fetchUser);
 
