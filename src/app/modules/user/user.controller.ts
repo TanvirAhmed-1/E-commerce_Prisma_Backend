@@ -49,11 +49,24 @@ const deleteUser = catchAsync(async (req, res) => {
 const loginUser = catchAsync(async (req, res) => {
   const payload = req.body;
 
+  // Validate input
   const loginValidation = loginSchema.parse(payload);
+
+  // Login service
   const result = await UserServices.loginDB(loginValidation);
+
+  // ✅ Set refreshToken in cookie
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: false,      // dev এ false, prod এ true
+    sameSite: "lax",    // dev এ lax, prod এ none
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  // ✅ Send response with token
   res.status(httpStatus.OK).json({
     success: true,
-    message: "User Delete successfully",
+    message: "User logged in successfully",
     result,
   });
 });

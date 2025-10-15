@@ -67,14 +67,30 @@ const loginDB = async (payload: loginType) => {
   };
 
   // sign token
-  const token = jwt.sign(jwtPayload, process.env.TOKEN_SECRET_KEY as string, {
-    expiresIn: "1d",
-  });
+  const accesstoken = jwt.sign(
+    jwtPayload,
+    process.env.TOKEN_SECRET_KEY as string,
+    {
+      expiresIn: "1d",
+    }
+  );
+
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    process.env.REFRESHTOKEN_SECRET_KEY as string,
+    {
+      expiresIn: "7d",
+    }
+  );
 
   // return data
   return {
-    token,
-    user: jwtPayload,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    token: accesstoken,
+    refreshToken,
   };
 };
 

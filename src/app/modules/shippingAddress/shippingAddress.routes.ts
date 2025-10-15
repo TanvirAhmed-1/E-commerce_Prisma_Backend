@@ -1,7 +1,10 @@
 import express from "express";
 import { shippingAddressController } from "./shippingAddress.controller";
+import { auth } from "../../middlewares/auth.middleware";
 
 const router = express.Router();
+
+router.use(auth());
 
 // Create new address
 router.post("/shipping-Address", shippingAddressController.createAddress);
@@ -19,4 +22,3 @@ router.put("/shipping-Address/:id", shippingAddressController.updateAddress);
 router.delete("/shipping-Address/:id", shippingAddressController.deleteAddress);
 
 export const ShippingAddressRoutes = router;
- 
