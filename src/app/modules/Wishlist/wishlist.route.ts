@@ -6,7 +6,7 @@ import { auth } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
-router.use(auth());
+ router.use(auth());
 
 // router.use(authMiddleware);
 router.get("/wishlists", wishlistController.getAllWishlist);

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 // create a Super Asmin
 // npx ts-node prisma/seed.ts
 async function main() {
-  const superAdminEmail = "tanvir@.com";
+  const superAdminEmail = "tanvir@gmail.com";
   const hashedPassword = await bcrypt.hash("tanvir123", 10);
 
   // Check if Super Admin already exists

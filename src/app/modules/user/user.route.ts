@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "./user.controller";
+import verifyToken from "./validation";
 
 const router = Router();
 

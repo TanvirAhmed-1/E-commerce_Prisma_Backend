@@ -1,8 +1,11 @@
-import express from "express";
+
 import { categoryController } from "./category.controller";
+import { auth } from "../../middlewares/auth.middleware";
+import { Router } from "express";
 
-const router = express.Router();
+const router = Router();
 
+  router.use(auth("SUPER_ADMIN"))
 // Create a category
 router.post("/categorys", categoryController.createCategory);
 
