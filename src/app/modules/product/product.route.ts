@@ -4,17 +4,14 @@ import { auth } from "../../middlewares/auth.middleware";
 
 const route = Router();
 
-
- route.use(auth());
+route.use(auth());
 
 route.post("/products", productController.createProduct);
 
-route.get("/products", productController.fetchProduct);
+route.get("/products/:productId", productController.fetchProduct);
 
-route.get("/products/:id", productController.fetchProduct);
+route.put("/products/:productId", productController.updateProduct);
 
-route.put("/products", productController.updateProduct);
-
-route.delete("/products", productController.deleteProduct);
+route.delete("/products/:productId", productController.deleteProduct);
 
 export const productRoute = route;

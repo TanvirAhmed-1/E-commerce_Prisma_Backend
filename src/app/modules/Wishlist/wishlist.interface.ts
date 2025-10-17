@@ -1,5 +1,5 @@
 export type Wishlist = {
-  id: string;
+  id?: string;
   productId: string;
   userId: string;
   createdAt?: Date;

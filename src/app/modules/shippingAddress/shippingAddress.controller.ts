@@ -8,10 +8,15 @@ import {
 } from "./shippingAddress.validation";
 
 // Create new address
-const createAddress = catchAsync(async (req: Request, res: Response) => {
-  const validatedData = CreateShippingAddressValidator(req.body);
+const createAddress = catchAsync(async (req, res) => {
   const data = req.body;
-  const address = await ShippingAddressService.create(validatedData);
+  const userId = req.user!.id;
+  const paylode = {
+    ...data,
+    userId,
+  };
+  const validatedData = CreateShippingAddressValidator(paylode);
+  const address = await ShippingAddressService.createDB(validatedData);
 
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -21,9 +26,10 @@ const createAddress = catchAsync(async (req: Request, res: Response) => {
 });
 
 // Get user addresses
-const getUserAddresses = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const addresses = await ShippingAddressService.getByUser(userId);
+const getUserAddresses = catchAsync(async (req, res) => {
+  const userId = req.user!.id;
+  //const userId = req.params.userId;
+  const addresses = await ShippingAddressService.getByUserDB(userId);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -32,18 +38,18 @@ const getUserAddresses = catchAsync(async (req: Request, res: Response) => {
 });
 
 // Update address
-const updateAddress = catchAsync(async (req: Request, res: Response) => {
+const updateAddress = catchAsync(async (req, res) => {
   const validatedData = UpdateShippingAddressValidator(req.body);
   const id = req.params.id;
-  const updated = await ShippingAddressService.update(id, validatedData);
+  const updated = await ShippingAddressService.updateDB(id, validatedData);
 
   res.status(200).json({ success: true, data: updated });
 });
 
 // Delete address
-const deleteAddress = catchAsync(async (req: Request, res: Response) => {
+const deleteAddress = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const deleted = await ShippingAddressService.delete(id);
+  const deleted = await ShippingAddressService.deleteDB(id);
 
   res.status(httpStatus.OK).json({
     success: true,

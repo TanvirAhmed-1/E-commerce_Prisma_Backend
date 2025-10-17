@@ -1,9 +1,11 @@
 import catchAsync from "../../utils/catchAsync";
 import { categoryServices } from "./category.services";
 import httpStatus from "http-status";
+import { createCategorySchema } from "./category.validation";
 
 const createCategory = catchAsync(async (req, res) => {
-  const result = await categoryServices.createCategiryDb(req.body);
+  const categoryValidation = createCategorySchema.parse(req.body);
+  const result = await categoryServices.createCategiryDb(categoryValidation);
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,
@@ -12,7 +14,7 @@ const createCategory = catchAsync(async (req, res) => {
   });
 });
 
-const fetchCategory = catchAsync(async (_req, res) => {
+const fetchCategory = catchAsync(async (req, res) => {
   const result = await categoryServices.fetchCategiryDb();
   res.status(httpStatus.OK).json({
     success: true,
@@ -34,7 +36,7 @@ const updateCategory = catchAsync(async (req, res) => {
 
 const deleteCategory = catchAsync(async (req, res) => {
   const { categoryId } = req.params;
-  const result = await categoryServices.DeleteCategiryDb(categoryId);
+  const result = await categoryServices.deleteCategiryDb(categoryId);
   res.status(httpStatus.OK).json({
     success: true,
     message: "Category deleted successfully",

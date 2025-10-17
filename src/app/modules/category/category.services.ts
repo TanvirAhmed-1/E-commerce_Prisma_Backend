@@ -17,6 +17,13 @@ const updateCategiryDb = async (
   payload: Partial<ICategory>,
   categoryId: string
 ) => {
+  const iscategory = await prisma.category.findUnique({
+    where: { id: categoryId },
+  });
+
+  if (!iscategory) {
+    throw new Error("Category Id not Found!");
+  }
   const result = await prisma.category.update({
     data: payload,
     where: { id: categoryId },
@@ -24,7 +31,13 @@ const updateCategiryDb = async (
   return result;
 };
 
-const DeleteCategiryDb = async (categoryId: string) => {
+const deleteCategiryDb = async (categoryId: string) => {
+  const iscategory = await prisma.category.findUnique({
+    where: { id: categoryId },
+  });
+  if (!iscategory) {
+    throw new Error("Category Id not Found!");
+  }
   const result = await prisma.category.delete({
     where: { id: categoryId },
   });
@@ -34,5 +47,5 @@ export const categoryServices = {
   fetchCategiryDb,
   createCategiryDb,
   updateCategiryDb,
-  DeleteCategiryDb,
+  deleteCategiryDb,
 };

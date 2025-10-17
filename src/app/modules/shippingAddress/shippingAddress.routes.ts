@@ -10,10 +10,7 @@ router.use(auth());
 router.post("/shipping-Address", shippingAddressController.createAddress);
 
 // Get all addresses of a user
-router.get(
-  "/shipping-Address/:userId",
-  shippingAddressController.getUserAddresses
-);
+router.get("/shipping-Address", shippingAddressController.getUserAddresses);
 
 // Update address
 router.put("/shipping-Address/:id", shippingAddressController.updateAddress);

@@ -1,9 +1,17 @@
 import catchAsync from "../../utils/catchAsync";
 import { reviewServices } from "./review.services";
 import httpStatus from "http-status";
+import { createReviewSchema } from "./review.validation";
 
 const createReview = catchAsync(async (req, res) => {
-  const result = await reviewServices.createReviewDb(req.body);
+  const data = req.body;
+  const userId = req.user!.id;
+  const paylode = {
+    ...data,
+    userId,
+  };
+  const reviewValidate = createReviewSchema.parse(paylode);
+  const result = await reviewServices.createReviewDb(reviewValidate);
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,

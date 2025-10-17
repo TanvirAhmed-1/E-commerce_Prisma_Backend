@@ -4,13 +4,13 @@ import { wishlistServices } from "./wishlist.services";
 import { wishlistValidation } from "./wishlist.validation";
 
 const addToWishlist = catchAsync(async (req, res) => {
-  const { productId } = wishlistValidation.parse(req.body);
+  const { productId } = req.body;
   const userId = req.user!.id; // ✅ 'user' small letter, ! ensures TypeScript it's defined
-
-  const wishlistItem = await wishlistServices.createToWishlist(
+  const validation = wishlistValidation.parse({
     userId,
-    productId
-  );
+    productId,
+  });
+  const wishlistItem = await wishlistServices.createToWishlist(validation);
 
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -32,7 +32,6 @@ const removeFromWishlist = catchAsync(async (req, res) => {
 });
 
 const getUserWishlist = catchAsync(async (req, res) => {
-
   //const userId = req.user!.id;
   const { userId } = req.params;
 

@@ -71,7 +71,7 @@ const loginDB = async (payload: loginType) => {
     jwtPayload,
     process.env.TOKEN_SECRET_KEY as string,
     {
-      expiresIn: "1m",
+      expiresIn: "7d",
     }
   );
 

@@ -1,20 +1,27 @@
 import { PrismaClient } from "@prisma/client";
+import { Wishlist } from "./wishlist.interface";
 const prisma = new PrismaClient();
 
 // Add product to wishlist
-const createToWishlist = async (userId: string, productId: string) => {
-
-  
-  const existing = await prisma.wishlist.findFirst({
-    where: { userId, productId },
+const createToWishlist = async (paylode: Wishlist) => {
+  const existingProduct = await prisma.product.findUnique({
+    where: { id: paylode.productId },
   });
 
-  if (existing) {
+  if (!existingProduct) {
+    throw new Error("Product id is Invalid");
+  }
+
+  const existing = await prisma.wishlist.findUnique({
+    where: { id: paylode.productId },
+  });
+
+  if (!existing) {
     throw new Error("Product already in wishlist");
   }
 
   return prisma.wishlist.create({
-    data: { userId, productId },
+    data: paylode,
   });
 };
 

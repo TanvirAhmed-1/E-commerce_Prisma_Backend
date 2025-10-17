@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { paymentController } from "./payment.controller";
-import { auth } from "../../middlewares/auth.middleware";
+//import { auth } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
 
- router.use(auth());
+ //router.use(auth());
 
 router.get("/payments", paymentController.getPayment);
 

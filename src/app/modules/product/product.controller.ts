@@ -2,27 +2,24 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { ProductServices } from "./product.services";
 
-
 // 🟢 Unified GET controller for all /products and /products/:id
 const fetchProduct = catchAsync(async (req, res) => {
-  const { id } = req.params;
+  const { productId } = req.params;
   const name = getQueryString(req.query.name);
   const category = getQueryString(req.query.category);
-  const productid = getQueryString(req.query.id);
 
   let result;
   let message;
 
-  if (id) {
+  if (productId) {
     // ✅ Case 1: Fetch by ID
-    result = await ProductServices.fetchSingleProductDB(id);
+    result = await ProductServices.fetchSingleProductDB(productId);
     message = `Product fetched by ID successfully`;
-  } else if (name || category || productid) {
+  } else if (name || category) {
     // ✅ Case 2: Search by name/category
     result = await ProductServices.searchProductsDB({
       name,
       category,
-      productid,
     });
     message = "Product search successful";
   } else {

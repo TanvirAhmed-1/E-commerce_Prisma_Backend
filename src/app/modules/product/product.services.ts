@@ -5,25 +5,24 @@ import { IProduct } from "./product.interface";
 interface ISearchParams {
   name?: string;
   category?: string;
-  productid?: string;
 }
 
 const createProductDB = async (payload: IProduct) => {
-  // create sura
-  const slug = slugify(payload.name, { lower: true, strict: true });
+
   //  create sku
   const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const randomPart = Math.floor(Math.random() * 1000)
     .toString()
     .padStart(3, "0");
   const sku = `SKU-${datePart}-${randomPart}`;
-
-  const sendData={
+  // create sura
+const slug = `${randomPart}-${slugify(payload.name, { lower: true, strict: true })}-d`;
+  const payloadData={
      ...payload,
         slug,
         sku,
   }
-  return prisma.product.create({ data: sendData });
+  return prisma.product.create({ data: payloadData });
 };
 
 const fetchProductDB = async () => {
@@ -40,17 +39,11 @@ const fetchSingleProductDB = async (productId: string) => {
 };
 
 const searchProductsDB = async (params: ISearchParams) => {
-  const { name, category, productid } = params;
+  const { name, category} = params;
 
   const whereClause: any = {};
 
-  if (productid) {
-    return await prisma.product.findUnique({
-      where: { id: productid },
-      include: { category: true },
-    });
-  }
-  // ✅ Search by name (if provided)
+
   if (name) {
     whereClause.name = { contains: name, mode: "insensitive" };
   }
@@ -62,8 +55,7 @@ const searchProductsDB = async (params: ISearchParams) => {
       name: { contains: category, mode: "insensitive" },
     };
 
-    // 👉 OR if category is just a string field, use this instead:
-    // whereClause.category = { contains: category, mode: "insensitive" };
+
   }
 
   return prisma.product.findMany({
