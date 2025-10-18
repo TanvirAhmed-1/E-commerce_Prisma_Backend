@@ -1,5 +1,5 @@
 export type OrderType = {
-  id: string;
+  id?: string;
   productId: string;
   userId: string;
   createdAt?: Date;

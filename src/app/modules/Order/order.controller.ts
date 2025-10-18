@@ -4,7 +4,13 @@ import { orderServices } from "./order.services";
 import { success } from "zod";
 
 const createOrder = catchAsync(async (req, res) => {
-  const result = await orderServices.createOrderDB(req.body);
+  const userId = req.user!.id;
+  const data = req.body;
+  const paylode = {
+    ...data,
+    userId,
+  };
+  const result = await orderServices.createOrderDB(paylode);
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,

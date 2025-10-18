@@ -1,12 +1,11 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { productVariantServices } from "./productVariant.services";
+import { ProductVariantValidation } from "./productVariant.validation";
 
-// 🟢 Create ProductVariant
 const createProductVariant = catchAsync(async (req, res) => {
-  const result = await productVariantServices.createProductVariantDB(req.body);
-
-  
+  const validate = ProductVariantValidation.parse(req.body);
+  const result = await productVariantServices.createProductVariantDB(validate);
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,
@@ -15,7 +14,7 @@ const createProductVariant = catchAsync(async (req, res) => {
   });
 });
 
-// 🟡 Fetch All ProductVariants
+//  Fetch All ProductVariants
 const getProductVariants = catchAsync(async (req, res) => {
   const result = await productVariantServices.fetchProductVariantsDB();
 
@@ -27,7 +26,7 @@ const getProductVariants = catchAsync(async (req, res) => {
   });
 });
 
-// 🔴 Delete ProductVariant by ID
+//  Delete ProductVariant by ID
 const deleteProductVariant = catchAsync(async (req, res) => {
   const { variantId } = req.params;
   const result = await productVariantServices.deleteProductVariantDB(variantId);
@@ -40,7 +39,7 @@ const deleteProductVariant = catchAsync(async (req, res) => {
   });
 });
 
-// 🔵 Update ProductVariant by ID
+// Update ProductVariant by ID
 const updateProductVariant = catchAsync(async (req, res) => {
   const { variantId } = req.params;
   const result = await productVariantServices.updateProductVariantDB(

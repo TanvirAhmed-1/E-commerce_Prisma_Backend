@@ -8,7 +8,6 @@ interface ISearchParams {
 }
 
 const createProductDB = async (payload: IProduct) => {
-
   //  create sku
   const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const randomPart = Math.floor(Math.random() * 1000)
@@ -16,22 +15,31 @@ const createProductDB = async (payload: IProduct) => {
     .padStart(3, "0");
   const sku = `SKU-${datePart}-${randomPart}`;
   // create sura
-const slug = `${randomPart}-${slugify(payload.name, { lower: true, strict: true })}-d`;
-  const payloadData={
-     ...payload,
-        slug,
-        sku,
-  }
+  const slug = `${randomPart}-${slugify(payload.name, {
+    lower: true,
+    strict: true,
+  })}-d`;
+  const payloadData = {
+    ...payload,
+    slug,
+    sku,
+  };
   return prisma.product.create({ data: payloadData });
 };
 
 const fetchProductDB = async () => {
   return prisma.product.findMany({
-    include: { category: true }, // optional if you have relation
+    include: { category: true },
   });
 };
 
 const fetchSingleProductDB = async (productId: string) => {
+  const exitingId = await prisma.product.findUnique({
+    where: { id: productId },
+  });
+  if (!exitingId) {
+    throw new Error(" Product Id Not Fund!");
+  }
   return prisma.product.findUnique({
     where: { id: productId },
     include: { category: true },
@@ -39,10 +47,9 @@ const fetchSingleProductDB = async (productId: string) => {
 };
 
 const searchProductsDB = async (params: ISearchParams) => {
-  const { name, category} = params;
+  const { name, category } = params;
 
   const whereClause: any = {};
-
 
   if (name) {
     whereClause.name = { contains: name, mode: "insensitive" };
@@ -54,8 +61,6 @@ const searchProductsDB = async (params: ISearchParams) => {
     whereClause.category = {
       name: { contains: category, mode: "insensitive" },
     };
-
-
   }
 
   return prisma.product.findMany({

@@ -8,7 +8,9 @@ route.use(auth());
 
 route.post("/products", productController.createProduct);
 
-route.get("/products/:productId", productController.fetchProduct);
+route.get("/products", productController.fetchProduct);
+
+route.get("/products/:productId", productController.getSingleProduct);
 
 route.put("/products/:productId", productController.updateProduct);
 

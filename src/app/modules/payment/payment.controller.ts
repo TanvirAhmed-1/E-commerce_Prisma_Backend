@@ -1,9 +1,19 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { PaymentServices } from "./payment.services";
+import { PaymentValidation } from "./payment.validation";
 
 const createPayment = catchAsync(async (req, res) => {
-  const result = await PaymentServices.createPaymentDB(req.body);
+  const userId=req.user!.id
+
+  const data=req.body
+
+  const paylode={
+    ...data,
+    userId
+  }
+  const validedPayment=PaymentValidation.parse( paylode)
+  const result = await PaymentServices.createPaymentDB(validedPayment);
 
   res.status(httpStatus.CREATED).json({
     success: true,

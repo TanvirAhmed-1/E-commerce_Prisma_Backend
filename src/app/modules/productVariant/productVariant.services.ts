@@ -1,22 +1,16 @@
-import httpStatus from "http-status";
 import prisma from "../../utils/prisma";
 import { ProductVariantType } from "./productVariant.interface";
 import { ProductVariantValidation } from "./productVariant.validation";
 
 const createProductVariantDB = async (payload: ProductVariantType) => {
-  // ✅ Validate payload
-  const parsed = ProductVariantValidation.parse(payload);
-
   const existingProduct = await prisma.product.findUnique({
-    where: { id: parsed.productId },
+    where: { id: payload.productId },
   });
-
   if (!existingProduct) {
-    throw {
-      status: httpStatus.BAD_REQUEST,
-      message: "Invalid productId: Product not found",
-    };
+    throw new Error("Invalid productId: Product not found");
   }
+
+  return await prisma.productVariant.create({ data: payload });
 };
 
 const fetchProductVariantsDB = async () => {
@@ -58,11 +52,23 @@ const updateProductVariantDB = async (
   variantId: string,
   payload: Partial<ProductVariantType>
 ) => {
-  const parsed = ProductVariantValidation.partial().parse(payload);
+  const existingProduct = await prisma.product.findUnique({
+    where: { id: payload.productId },
+  });
+  if (!existingProduct) {
+    throw new Error("Invalid productId: Product not found");
+  }
+
+  const existingvId = await prisma.productVariant.findUnique({
+    where: { id: variantId },
+  });
+  if (!existingvId) {
+    throw new Error("Invalid params id is not found");
+  }
 
   return prisma.productVariant.update({
     where: { id: variantId },
-    data: parsed,
+    data: payload,
   });
 };
 

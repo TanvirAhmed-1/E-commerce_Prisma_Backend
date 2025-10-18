@@ -3,7 +3,13 @@ import catchAsync from "../../utils/catchAsync";
 import { couponservices } from "./coupon.services";
 
 const createCoupon = catchAsync(async (req, res) => {
-  const result = await couponservices.createCouponBD(req.body);
+  const data = req.body;
+  const userId = req.user!.id;
+  const coupon = {
+    ...data,
+    userId,
+  };
+  const result = await couponservices.createCouponBD(coupon);
 
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -32,7 +38,7 @@ const deleteCoupon = catchAsync(async (req, res) => {
     success: true,
     statusCode: 201,
     message: " Coupon Delete Succesfully",
-    result
+    result,
   });
 });
 
