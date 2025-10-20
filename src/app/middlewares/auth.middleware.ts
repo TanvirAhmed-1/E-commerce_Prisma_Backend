@@ -4,23 +4,25 @@ import catchAsync from "../utils/catchAsync";
 import verifyToken from "../utils/verifyToken";
 import prisma from "../utils/prisma";
 
-
 type TUserRole = "SUPER_ADMIN" | "ADMIN" | "USER" | "SELLER";
 
 export const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization; // ✅ শুধুমাত্র token নিচ্ছে, Bearer নয়
+    //const token = req.headers.authorization; // ✅ শুধুমাত্র token নিচ্ছে, Bearer নয়
+    const authHeader = req.headers.authorization; // ✅ শুধুমাত্র token নিচ্ছে, Bearer নয়
 
-    if (!token) {
+    if (!authHeader) {
       return res.status(httpStatus.UNAUTHORIZED).json({
         success: false,
         message: "Unauthorized  User",
       });
     }
 
+    const token = authHeader.split(" ")[1];
+
     let decoded: any;
     try {
-      decoded = verifyToken(token); // ✅ সরাসরি token verify
+      decoded = verifyToken(token);
     } catch (err) {
       return res.status(httpStatus.UNAUTHORIZED).json({
         success: false,

@@ -1,6 +1,4 @@
-// ============================================
-// File: src/middlewares/validateRequest.ts
-// ============================================
+
 import { NextFunction, Request, Response } from "express";
 import { ZodError, ZodSchema } from "zod";
 import httpStatus from "http-status";

@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import { notificationController } from "./notification.controller";
 import { NotificationValidation } from "./notification.validation";
 import { auth } from "../../middlewares/auth.middleware";
