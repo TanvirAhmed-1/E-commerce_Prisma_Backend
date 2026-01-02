@@ -5,7 +5,7 @@ import { paymentController } from "./payment.controller";
 const router = Router();
 
 
- //router.use(auth());
+ router.use(auth());
 
 router.get("/payments", paymentController.getPayment);
 
